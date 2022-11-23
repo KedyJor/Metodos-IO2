@@ -24,21 +24,7 @@ class Tarea():
             self.critica = 'si'
         else: 
             self.critica = 'no'
-
-        
-
-def ObtenerDatos(file,hoja):
-    Datos=pd.read_excel(file,sheet_name= hoja)
-    return Datos
-
-
-def CrearActividades(Datos):
-    Tareas = []
-    for i in range(len(Datos)):
-        Tareas.append(Tarea(Datos['NOMBRE'][i], Datos['DURACION'][i],Datos['PREDECESOR'][i]))
-
-    return Tareas
-
+     
 
 def HaciaAdelante(Tareas):
     
@@ -99,29 +85,4 @@ def Holgura(Tareas):
         Tarea.obtener_holgura()
 
 
-def ActualizarDatos(Datos,Tareas):
-        Datos1 = pd.DataFrame({
-        'NOMBRE' : Datos['NOMBRE'],
-        'PREDECESOR' : Datos['PREDECESOR'],
-        'DURACION' : Datos['DURACION'],
-        'IC' : pd.Series([Tarea.IC for Tarea in Tareas]),
-        'TC' : pd.Series([Tarea.TC for Tarea in Tareas]),
-        'IL' : pd.Series([Tarea.IL for Tarea in Tareas]),
-        'TL' : pd.Series([Tarea.TL for Tarea in Tareas]),
-        'HOLGURA' : pd.Series([Tarea.holgura for Tarea in Tareas]),
-        'CPM' : pd.Series([Tarea.critica for Tarea in Tareas]),
-        })
-        return Datos1
 
-def main():
-
-    a = ObtenerDatos("TablaA.xlsx","Hoja1")
-    ad = CrearActividades(a)
-    HaciaAdelante(ad)
-    HaciaAtras(ad)
-    Holgura(ad)
-    a1=ActualizarDatos(a,ad)
-    print(a1)
-
-
-main()
