@@ -112,8 +112,7 @@ def Aventana3(c,Tareas):
             elif column == 7:
                 lav=Label(ventana3,text = Tareas[row].holgura)
                 lav.grid(row=row+1, column=column, sticky="nsew", padx=5, pady=5)
-            else:
-                g =1
+            
 
 
 ventana1.title("Metodo De la Ruta Critica")
