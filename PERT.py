@@ -32,22 +32,6 @@ class Tarea():
     def obtener_varianza(self):
         self.Varianza = ((self.TP - self.TO)**2)/36       
 
-def ObtenerDatos(file,hoja):
-    Datos=pd.read_excel(file,sheet_name= hoja)
-    return Datos
-
-def CalcularDuracion(Datos):
-    Datos['DURACION'] = np.ceil((Datos['TO'] + Datos['TM']*4 + Datos['TP'])/6)
-    
-    return Datos
-
-def CrearActividades(Datos):
-    Tareas = []
-    for i in range(len(Datos)):
-        Tareas.append(Tarea(Datos['NOMBRE'][i], Datos['DURACION'][i],Datos['PREDECESOR'][i],Datos['TP'][i],Datos['TM'][i],Datos['TO'][i]))
-
-    return Tareas
-
 
 def HaciaAdelante(Tareas):
     
@@ -119,35 +103,3 @@ def Desviacion(Tareas):
 
     return Desviacion
 
-
-
-def ActualizarDatos(Datos,Tareas):
-        Datos1 = pd.DataFrame({
-        'NOMBRE' : Datos['NOMBRE'],
-        'PREDECESOR' : Datos['PREDECESOR'],
-        'DURACION' : Datos['DURACION'],
-        'IC' : pd.Series([Tarea.IC for Tarea in Tareas]),
-        'TC' : pd.Series([Tarea.TC for Tarea in Tareas]),
-        'IL' : pd.Series([Tarea.IL for Tarea in Tareas]),
-        'TL' : pd.Series([Tarea.TL for Tarea in Tareas]),
-        'HOLGURA' : pd.Series([Tarea.holgura for Tarea in Tareas]),
-        'VARIANZA' : pd.Series([Tarea.Varianza for Tarea in Tareas]),
-        'DESVIACION E.' : pd.Series([Desviacion(Tareas)]),
-        })
-        return Datos1
-
-def main():
-
-    a = ObtenerDatos("TablaA.xlsx","Hoja2")
-    print(a,'\n')
-    a = CalcularDuracion(a)
-    ad = CrearActividades(a)
-    HaciaAdelante(ad)
-    HaciaAtras(ad)
-    Holgura(ad)
-    Varianza(ad)
-    a1=ActualizarDatos(a,ad)
-    print(a1)
-
-
-main()
