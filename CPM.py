@@ -11,19 +11,15 @@ class Tarea():
         self.Predecesor = Predecesor
         self.Sucesores = []
         self.holgura = 0
-        self.critica = ''
         self.IC= 0
         self.TC= 0
         self.IL= 0
         self.TL= 0
-        self.ESTADO =''
+       
        
     def obtener_holgura(self):
         self.holgura = self.TL - self.TC
-        if self.holgura == 0:
-            self.critica = 'si'
-        else: 
-            self.critica = 'no'
+        
      
 
 def HaciaAdelante(Tareas):
