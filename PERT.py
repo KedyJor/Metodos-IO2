@@ -35,7 +35,7 @@ class Tarea():
 
 def HaciaAdelante(Tareas):
     
-    aux = []
+    
     for Tarea in Tareas:
         if type(Tarea.Predecesor) is str:
             IC_Lista = []
@@ -43,7 +43,7 @@ def HaciaAdelante(Tareas):
                 for j in Tareas:
                     if j.Nombre == i:
                         IC_Lista.append(j.TC)
-                        aux.append(j.TC)
+                        
                 Tarea.IC = max(IC_Lista)
 
             del IC_Lista
