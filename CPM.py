@@ -84,5 +84,11 @@ def Holgura(Tareas):
     for Tarea in Tareas:
         Tarea.obtener_holgura()
 
+def RTC(Tareas):
+    rtc = []
+    for Tarea in Tareas:
+        if Tarea.holgura == 0: 
+            rtc.append(Tarea.Nombre)
 
+    return rtc
 
