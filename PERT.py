@@ -98,8 +98,16 @@ def Varianza(Tareas):
 def Desviacion(Tareas):
     Desviacion = 0
     for Tarea in Tareas:
-        Desviacion = Desviacion + Tarea.Varianza
+        if Tarea.holgura == 0:
+            Desviacion = Desviacion + Tarea.Varianza
     Desviacion = Desviacion**(0.5)
 
     return Desviacion
 
+def RTC(Tareas):
+    rtc = []
+    for Tarea in Tareas:
+        if Tarea.holgura == 0:
+            rtc.append(Tarea.Nombre)
+
+    return rtc
