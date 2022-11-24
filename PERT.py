@@ -15,19 +15,15 @@ class Tarea():
         self.Varianza = 0
         self.Sucesores = []
         self.holgura = 0
-        self.critica = ''
         self.IC= 0
         self.TC= 0
         self.IL= 0
         self.TL= 0
-        self.ESTADO =''
+       
        
     def obtener_holgura(self):
         self.holgura = self.TL - self.TC
-        if self.holgura == 0:
-            self.critica = 'si'
-        else: 
-            self.critica = 'no'
+    
 
     def obtener_varianza(self):
         self.Varianza = ((self.TP - self.TO)**2)/36       
@@ -64,6 +60,7 @@ def HaciaAtras(Tareas):
             for j in Tarea.Predecesor:
                 Patron = re.compile(r'[A-Z]')
                 Match = Patron.finditer(j)
+
                 for r in Match:
                     predecer.append(j)
 
