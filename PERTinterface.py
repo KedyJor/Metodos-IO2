@@ -53,10 +53,9 @@ def apendear(lis,cant):
             fil.append(j)    
         a = a+5
         b = b+5
-
-    print(Act)
+        
     Aux = ObtenerDuracion(Act)
-    print(Aux)
+ 
     Tareas = []
     for j in range(len(Act)):
         Tareas.append(Tarea(Act[j][0],Aux[j],Act[j][1],int(Act[j][2]),int(Act[j][3]),int(Act[j][4])))
@@ -134,7 +133,7 @@ def Aventana3(c,Tareas):
                 lav=Label(ventana3,text = ("{0:.2f}".format(Tareas[row].Varianza)))
                 lav.grid(row=row+1, column=column, sticky="nsew", padx=5, pady=5)    
             elif column == 9:
-                lav=Label(ventana3,text = Desviacion(Tareas))
+                lav=Label(ventana3,text = ("{0:.2f}".format(Desviacion(Tareas))))
                 lav.grid(row=1, column=column, sticky="nsew", padx=5, pady=5) 
                  
     labelRT=Label(ventana3,text="Ruta Critica",bg="orange",fg="black",font="Arial 10 bold")        
@@ -147,7 +146,7 @@ def Aventana3(c,Tareas):
     labelRT3.grid(row=c+3, column=1)
     labelRT2=Label(ventana3,text="Ocurrencia Tardia",bg="orange",fg="black",font="Arial 10 bold")        
     labelRT2.grid(row=c+2, column=2)
-    labelRT3=Label(ventana3,text=(Tareas[0].TL),bg="orange",fg="#2F4F4F",font="consolas 10 bold")        
+    labelRT3=Label(ventana3,text=int(Tareas[0].TL),bg="orange",fg="#2F4F4F",font="consolas 10 bold")        
     labelRT3.grid(row=c+3, column=2)
 
 ventana1.title("PERT")
