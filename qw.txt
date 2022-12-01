@@ -1,0 +1,195 @@
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <string.h>
+
+using namespace std;
+#define MAX 51
+
+char final[] = "salir";
+
+// CLASE PROMPT
+class Prompt{
+    private:
+        char User[MAX]; // Nombre del Usuario
+        char Host[MAX]; // Nombre del Host
+    public:
+        Prompt();
+        void Mostrar_P();// Mostrar Prompt
+        void OcultarNombreUyH(char cad[]);// Ocultar el nombre de Usuario y Host
+        void RestablecerPrompt();// Restablece los nombres del Usuario y Host por defecto
+};
+
+Prompt :: Prompt()
+{
+    strcpy(User ,"username");
+    strcpy(Host,"hostname");
+}
+
+void Prompt :: Mostrar_P()
+{
+    cout<<User<<"@"<<Host<<":~$ ";
+}
+
+void Prompt :: RestablecerPrompt()
+{
+    Prompt();
+}
+
+int comparar(char cad1[], char cad2[]); 
+void redirecEntrada(char cadena[]); 
+void redirecSalida(char cadena[]);
+void CrearProceso(char *argumento[MAX], int tipoPlano); 
+void Tuberias(char *argumento1[MAX], char *argumento2[MAX]);
+
+
+// COMPARAR DOS CADENAS
+int comparar(char cad1[], char cad2[])
+{
+
+    if (strcmp(cad1, cad2) == 0)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+// Redireccionar Salida
+void redirecSalida(char cadena[])
+{
+    char *cadenaPtr;
+
+    cadenaPtr = cadena;
+    close(1); // Cierra la salida estandar
+    open(cadenaPtr, O_CREAT | O_WRONLY, 0777); // Asigna la salida al fichero (Cadena)
+}
+
+//Comando
+void comando(char cadena[], int tipoPlano)
+{
+    char Cadena_Comandos[MAX][MAX];
+    char Fichero[MAX];
+    char *cadenapuntero[MAX];
+    int j, i, k;
+
+    k = 0;
+    i = 0;
+    int ejecutar = 0;
+
+    while (cadena[i] != '\0' && cadena[i] != '>')
+    {
+    	// Recorrido y almacenado de la cadena.
+        for (j = 0; cadena[i] != ' ' && cadena[i] != '\0' && cadena[i] != '>' ; j++)
+        {
+            Cadena_Comandos[k][j] = cadena[i];
+            i++;
+        }
+        // Se detecta los espacios.
+        if (cadena[i] == ' ')
+        {
+            i++;
+        }
+        // Se asigna el simbolo para indicar que se finalizo con un comando.
+        Cadena_Comandos[k][j] = '\0';
+        // Se le asigna a cada comando un puntero para que posteriormente se ejecute.
+        cadenapuntero[k] = Cadena_Comandos[k];
+        k++;
+    }
+    cadenapuntero[k] = NULL;
+
+    // En caso de encontrar >  se extraera la cadena que será el fichero que quiere utilizar para la salida
+    if (cadena[i] == '>')
+    {
+        i++;
+        if (cadena[i] != ' ')
+        {
+            ejecutar = 1;
+        }
+        else
+        {
+            i++;
+            for (j = 0; cadena[i] != '\0'; j++)
+            {
+                Fichero[j] = cadena[i];
+                i++;
+            }
+            redirec[j] = '\0';
+            redirecSalida(Fichero);
+        }
+    }
+
+    if (ejecutar == 0)
+    {
+        if (band_t == 0)
+        {
+            CrearProceso(cadenapuntero, tipoPlano);
+        }
+    }
+    else
+    {
+        printf("Error de Syntaxis.\n");
+    }
+}
+
+// Crea un proceso a partir de un comando
+void CrearProceso(char *argumento[MAX], int tipoPlano)
+{
+    int estado = 0;
+    pid_t hijo;
+    hijo = fork();
+    
+    // Crea el proceso hijo
+	if (hijo == 0)
+    {
+
+        execvp(argumento[0], argumento);
+
+        if(comparar(argumento[0], final) == 0) {
+            perror(argumento[0]);
+        }
+        
+        exit(estado);
+    }
+    else
+    {
+        if (tipoPlano == 0)
+            hijo = wait(&estado); //Espera a que acabe el proceso padre
+    }
+}
+
+int main()
+{
+
+    char cadena[MAX];
+    int cpront = 0;
+    int segPlano = 0, i, guardaStdout = dup(1), guardaStdin = dup(0);
+    Prompt P1;
+
+    while (cpront == 0)
+    {
+        close(1);
+        dup(guardaStdout);
+        close(0);
+        dup(guardaStdin);
+        P1.Mostrar_P();
+        scanf("\n%[^\n]", cadena);
+        segPlano = 0;
+        for (i = 0; cadena[i] != '\0'; i++)
+        {
+            if (cadena[i] == '&')
+            {
+                cadena[i] = '\0';
+                segPlano = 1;
+            }
+        }
+
+        cpront = comparar(cadena, final);
+        comando(cadena, segPlano);
+    }
+
+    return 0;
+}
